@@ -56,15 +56,25 @@ void delay(uint8_t ciclos){
 }
 
 ISR(PCINT0_vect){
+	
+	
 	if(((PINB) & (1<<0)) == 0){
 		conteo ++;
+		if(conteo >= 255){
+			conteo = 255;
+		}
+		PORTD = conteo;
 	}
 	
 	if(((PINB) & (1<<1)) == 0){
 			conteo --;
+				if(conteo <= 0){
+					conteo = 0;
+				}
+			PORTD = conteo;
 		}
 		
-	PORTD = conteo;
+	
 	
 }
 
