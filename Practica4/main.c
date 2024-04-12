@@ -27,7 +27,7 @@ int activa = 1, activa1= 1, activa2 = 1;
 int dato = 0, dato3 = 0, dato4 = 0, dato5 = 0, dato6 = 0, dato7 = 0, i = 0, n = 0, bin[8];
 const uint8_t  lista[16] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7C, 0x07, 0x7F, 0X6F, 0X77, 0X7C, 0X39, 0X5E, 0X79, 0X71};
 	
-char data[4];
+int ADCMAYOR = 0, ADCMENOR = 0;
 
 
 void setup(void){
@@ -70,11 +70,11 @@ int main(void)
 		
 		_delay_ms(6);
 		PORTB ^= (1<<2) | (1<<3);  //ENCENDER DISPLAY 1 Y APAGAR LEDS
-		PORTD = lista[dato2];   //Mostrar el dato del display 1
+		PORTD = lista[ADCMAYOR];   //Mostrar el dato del display 1
 		
 		_delay_ms(6);
 		PORTB ^=  (1<<3)| (1<<4);   //ENCENDER DISPLAY 2 Y APAGAR DISPLAY 1
-		PORTD = lista[dato1];   //Mostrar el dato del display 2
+		PORTD = lista[ADCMENOR];   //Mostrar el dato del display 2
 		
 		_delay_ms(6);
 		PORTB ^=  (1<<4);   //APAGAR DISPLAY 2
@@ -127,36 +127,13 @@ ISR(PCINT0_vect){
 
 
 ISR(ADC_vect){
-	ADCSRA |= (1<<ADIF);  //Apagando bandera
 	dato3 = ADCH;   //Contador general
 	
-	if(activa == 1){
-		dato1 = (((ADCH)*(15))/16) - dato;   //leer y convertir valor en display 1
-
-		if(dato1 == 15){
-			dato2 = dato2 + 1;  //Mostrar dato en display 2
-			dato = (((ADCH)*(15))/16);
-		}
-
-		else if(dato2 == 15){   //Si los display llegan a FF
-			if (dato1 == 14){
-				dato1 = 15;
-				activa = 0;  //Desactivar suma
-			}
-		}
-
-		else{
-			dato2 = dato2;
-			
-		}
-	}
-
-
-	if (activa == 0){
-		dato1 =  (((ADCH)*(15))/16);   //leer y convertir valor en display 1
+		uint16_t adc_val16 = ADC;   //Se leer el valor del ADC
+		uint8_t adcValue = (adc_val16 >> 8);  //Corrimiento
 		
-		if(dato1 >= dato1){
-			dato1 = 15;
-		}
-}
+		ADCMAYOR = adcValue >> 4;   //Se separan los valores de 0 a 255 de 8 bits, a dos arreglos de 4 bits
+		ADCMENOR = adcValue & 0x0F;
+	  ADCSRA |= (1<<ADIF); //Se borra la bandera de interrupción
+
 }
