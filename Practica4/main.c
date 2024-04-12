@@ -20,11 +20,8 @@ void setup(void);
 void initADC(void);
 
 int conteo = 0; //Variable para contador de 0 a 255
-uint8_t dato1 = 0;
-uint8_t dato2 = 0;
-uint8_t datos1[4], datos2[4];
-int activa = 1, activa1= 1, activa2 = 1;
-int dato = 0, dato3 = 0, dato4 = 0, dato5 = 0, dato6 = 0, dato7 = 0, i = 0, n = 0, bin[8];
+int  activa1= 1;
+int dato3 = 0;
 const uint8_t  lista[16] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7C, 0x07, 0x7F, 0X6F, 0X77, 0X7C, 0X39, 0X5E, 0X79, 0X71};
 	
 int ADCMAYOR = 0, ADCMENOR = 0;
